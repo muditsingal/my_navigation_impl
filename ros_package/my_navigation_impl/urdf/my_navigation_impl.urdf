@@ -273,15 +273,8 @@
   </plugin>
 </gazebo>
 
-  <joint name="hokuyo_joint" type="fixed">
-    <axis xyz="0 1 0" />
-    <origin xyz="0 0 0.9" rpy="0 0 0"/>
-    <parent link="base_link"/>
-    <child link="hokuyo_link"/>
-  </joint>
-
   <!-- Hokuyo Laser -->
-  <link name="hokuyo_link">
+  <link name="lidar_link">
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -292,7 +285,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size="0.2 0.2 0.1"/>
+        <box size="0.05 0.05 0.01"/>
       </geometry>
     </visual>
 
@@ -303,10 +296,17 @@
     </inertial>
   </link>
 
+  <joint name="hokuyo_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+  </joint>
+
   <!-- hokuyo -->
-  <gazebo reference="hokuyo_link">
+  <gazebo reference="lidar_link">
     <sensor type="ray" name="head_hokuyo_sensor">
-      <pose>0 0 0.9 0 0 0</pose>
+      <pose>0 0 0.1 0 0 0</pose>
       <visualize>true</visualize>
       <update_rate>20</update_rate>
       <ray>
@@ -335,7 +335,7 @@
       </ray>
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
         <topicName>/laser/scan</topicName>
-        <frameName>hokuyo_link</frameName>
+        <frameName>lidar_link</frameName>
       </plugin>
     </sensor>
   </gazebo>
