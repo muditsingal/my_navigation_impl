@@ -1,0 +1,10 @@
+my_navigation_impl:
+  gazebo_ros_control/pid_gains
+    FR_joint:
+      pid: {p: 20.0 , i: 0.0 , d: 2.0}
+    FL_joint:
+      pid: {p: 20.0 , i: 0.0 , d: 2.0}
+    BR_joint:
+      pid: {p: 20.0 , i: 0.0 , d: 2.0}
+    BL_joint:
+      pid: {p: 20.0 , i: 0.0 , d: 2.0}
