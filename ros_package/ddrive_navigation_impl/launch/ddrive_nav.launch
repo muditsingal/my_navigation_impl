@@ -17,14 +17,37 @@
 	<!-- Add in your robot name in the value tag -->
 	<param name = "my_robot" value="ddrive_navigation_impl"/> 
 	<arg name ="init_pose" value="-x 0 -y 0 -z 0 -R 0 -P 0 -Y 0"/>
+	<!-- remap from="/laser/scan" to="/scan" / -->
 
 	<!-- TF node that gives the static transformation between the world map and the base link of your robot. Change /base_link to the /root link name of your robot -->
-	<!-- node name="tf_footprint_base" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /map /base_link 10" / -->
-	<!-- node name="tf_laser_base" pkg="tf" type="static_transform_publisher" args="0 0 0.06 0 0 0 /base_link /base_laser 10" / -->
+	<node name="tf_footprint_base" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /base_link /base_footprint 30" />
+	<node name="tf_map_odom" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /map /odom 30" />
 
 
 	<!-- A node to publish the robot states onto ros network -->
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen" />	
+	
+	<!-- Map file -->
+	<arg name="map_file" default="$(find ddrive_navigation_impl)/maps/ddrive_map1.yaml"/>
+
+	<!-- Map server publishes: /map and /map_metadata -->
+	<node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)" />
+	
+	<!-- AMCL node -->
+	<!-- Subscribes to /scan, /tf, /initialpose, /map publishes /amcl_pose, /particlecloud, /tf -->
+	<include file="$(find amcl)/examples/amcl_diff.launch"/>
+	
+	<!-- Move Base Node -->
+	<!-- Subscribes to /move_base_simple/goal publishes cmd_vel -->
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+		<rosparam file="$(find ddrive_navigation_impl)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+		<rosparam file="$(find ddrive_navigation_impl)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+		<rosparam file="$(find ddrive_navigation_impl)/param/global_costmap_params.yaml" command="load" ns="global_costmap" />
+		<rosparam file="$(find ddrive_navigation_impl)/param/local_costmap_params.yaml" command="load" ns="local_costmap" />
+		<rosparam file="$(find ddrive_navigation_impl)/param/base_local_planner_params.yaml" command="load" />
+	</node>
+	
+	<node type="rviz" name="rviz" pkg="rviz" args="-d $(find ddrive_navigation_impl)/config/nav_rviz_config.rviz" />
 
 
 	<!-- A node to spawn the robot into gazebo's world file. Notice that the args has the param robot_description that you previously defined. This is how your robot's spec gets included.-->

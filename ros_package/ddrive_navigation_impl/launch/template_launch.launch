@@ -20,7 +20,7 @@
 
 	<!-- TF node that gives the static transformation between the world map and the base link of your robot. Change /base_link to the /root link name of your robot -->
 	<!-- node name="tf_footprint_base" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /map /base_link 10" / -->
-	<!-- node name="tf_laser_base" pkg="tf" type="static_transform_publisher" args="0 0 0.06 0 0 0 /base_link /base_laser 10" / -->
+	<node name="tf_map_odom_pub" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /map /odom 10" />
 
 
 	<!-- A node to publish the robot states onto ros network -->

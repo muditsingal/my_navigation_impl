@@ -37,9 +37,9 @@
 	<gazebo reference="base_laser">
 		<sensor name="laser" type="ray"> 
 			<!-- Add in your sensor characteristics -->
-			<pose> 0 0 0.06 0 0 0 </pose>
+			<pose> 0.02 0 0.06 0 0 0 </pose>
 			<visualise>true</visualise>
-			<update_rate>20</update_rate>
+			<update_rate>30</update_rate>
 			<ray>
 				<scan>
 					<horizontal>
@@ -62,7 +62,7 @@
             		</ray>
 			<plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
 				<!-- Use topic name as /my_robot/scan -->
-					<topicName>/laser/scan</topicName> 
+					<topicName>/scan</topicName> 
 					<frameName>base_laser</frameName>
 			</plugin>
 		</sensor>
